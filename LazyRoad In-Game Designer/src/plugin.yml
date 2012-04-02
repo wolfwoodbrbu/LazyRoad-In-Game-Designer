@@ -1,0 +1,25 @@
+name: LazyRoadInGameDesigner
+main: com.VeraLapsa.LRIGD.LazyRoadInGameDesigner
+description: Plugin for making roads for LazyRoad.
+version: 0.1a
+depend: [LazyRoad, WorldEdit]
+softdepend: [LazyRoad, WorldEdit]
+commands:
+   lrd:
+      description: Main command of LazyRoad In-Game Designer
+      usage: |
+        /<command> help [topic]
+        /<command> setroad
+        /<command> setstairs
+        /<command> setgrade <number>
+        /<command> setkeepid <blockID>
+        /<command> roadinfo
+        /<command> testroad
+        /<command> stoptest
+        /<command> saveroad <name>
+      permission: lrd.design
+      permission-message: You don't have <permission>
+permissions:
+  lrd.design:
+    description: Allows use of the /lrd command.
+    default: op
