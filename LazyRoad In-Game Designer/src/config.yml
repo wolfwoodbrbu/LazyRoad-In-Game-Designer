@@ -1,3 +1,3 @@
 debug:
-  commandcalls: true
-  gotheres: true
+  commandcalls: false
+  gotheres: false

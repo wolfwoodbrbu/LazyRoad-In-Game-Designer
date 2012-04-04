@@ -1,24 +1,70 @@
 name: LazyRoadInGameDesigner
 main: com.VeraLapsa.LRIGD.LazyRoadInGameDesigner
 description: Plugin for making roads for LazyRoad.
-version: 0.1a
+version: 0.2.1b
+author: VeraLapsa
 depend: [LazyRoad, WorldEdit]
 softdepend: [LazyRoad, WorldEdit]
 commands:
-   lrd:
-      description: Main command of LazyRoad In-Game Designer
-      usage: |
-        /<command> help [topic]
-        /<command> setroad
-        /<command> setstairs
-        /<command> setgrade <number>
-        /<command> setkeepid <blockID>
-        /<command> roadinfo
-        /<command> testroad
-        /<command> stoptest
-        /<command> saveroad <name>
-      permission: lrd.design
-      permission-message: You don't have <permission>
+  lrdhelp:
+    description: Help command for LazyRoad In-Game Designer
+    usage: |
+      /<command> [topic]
+      Topics:[setroad, setstairs, setgrade, saveroad]
+      Topics:[setkeepid, roadinfo, testroad, teststop]
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  setroad:
+    description: Sets up your WE selection as a road
+    usage: /<command>
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  setstairs:
+    description: Sets your we selection as the roads stairs.
+    usage: |
+      /<command>
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  setgrade:
+    description: Sets how often the road's allowed to make stairs.
+    usage: /<command> <positive number>
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  setkeepid:
+    description: Sets the value keeper id.
+    usage: |
+      /<command> <BlockTypeID>
+      This is what block you want to use to have
+      the road ignore that space and not place air.
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  roadinfo:
+    description: Displays the road's info.
+    usage: |
+      /<command>
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  saveroad:
+    description: Saves your currently set road to to your desired name.
+    usage: |
+      /<command> <name>
+      Can not contain spaces.
+      This saves the road to the LazyRoad/roads folder
+      and reloads LazyRoad.
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  testroad:
+    description: Allows you to test your road before saving it.
+    usage: |
+      /<command>
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  teststop:
+    description: Stops the test road and undoes it.
+    usage: |
+      /<command>
+    permission: lrd.design
+    permission-message: You don't have <permission>
 permissions:
   lrd.design:
     description: Allows use of the /lrd command.
