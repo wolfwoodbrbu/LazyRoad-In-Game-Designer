@@ -1,7 +1,7 @@
 name: LazyRoadInGameDesigner
 main: com.VeraLapsa.LRIGD.LazyRoadInGameDesigner
 description: Plugin for making roads for LazyRoad.
-version: 0.2.1b
+version: 0.3.3
 author: VeraLapsa
 depend: [LazyRoad, WorldEdit]
 softdepend: [LazyRoad, WorldEdit]
@@ -12,6 +12,7 @@ commands:
       /<command> [topic]
       Topics:[setroad, setstairs, setgrade, saveroad]
       Topics:[setkeepid, roadinfo, testroad, teststop]
+      Topics:[setpillar, savepillar, testpillar, pillarinfo]
     permission: lrd.design
     permission-message: You don't have <permission>
   setroad:
@@ -61,6 +62,34 @@ commands:
     permission-message: You don't have <permission>
   teststop:
     description: Stops the test road and undoes it.
+    usage: |
+      /<command>
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  setpillar:
+    description: Sets up your WE selection as a pillar
+    usage: /<command>
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  savepillar:
+    description: Saves your currently set pillar to to your desired name.
+    usage: |
+      /<command> <name>
+      Can not contain spaces.
+      This saves the road to the LazyRoad/pillars folder
+      and reloads LazyRoad.
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  testpillar:
+    description: Allows you to test your pillar before saving it.
+    usage: |
+      /<command> [road name]
+      Plain /<command> tests the road with the currently set road.
+      Otherwise "road name" is a name of a saved LazyRoad road.
+    permission: lrd.design
+    permission-message: You don't have <permission>
+  pillarinfo:
+    description: Displays the pillar's info.
     usage: |
       /<command>
     permission: lrd.design

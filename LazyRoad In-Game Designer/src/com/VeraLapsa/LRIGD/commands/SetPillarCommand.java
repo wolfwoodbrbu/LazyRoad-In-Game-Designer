@@ -3,8 +3,8 @@ package com.VeraLapsa.LRIGD.commands;
 import com.VeraLapsa.LRIGD.CommandHandler;
 import com.VeraLapsa.LRIGD.Direction;
 import com.VeraLapsa.LRIGD.LazyRoadInGameDesigner;
-import com.creadri.lazyroad.Road;
-import com.creadri.lazyroad.RoadPart;
+import com.creadri.lazyroad.Pillar;
+import com.creadri.lazyroad.PillarPart;
 import com.sk89q.worldedit.IncompleteRegionException;
 import com.sk89q.worldedit.blocks.BaseBlock;
 import com.sk89q.worldedit.bukkit.WorldEditAPI;
@@ -22,12 +22,12 @@ import org.bukkit.entity.Player;
  *
  * @author VeraLapsa
  */
-public class SetRoadCommand extends CommandHandler {
+public class SetPillarCommand extends CommandHandler {
 
-    private Road road = null;
+    private Pillar pillar = null;
     private int keepid = -1;
 
-    public SetRoadCommand(LazyRoadInGameDesigner plugin) {
+    public SetPillarCommand(LazyRoadInGameDesigner plugin) {
         super(plugin);
     }
 
@@ -41,31 +41,29 @@ public class SetRoadCommand extends CommandHandler {
             plugin.getConfig().set("users." + sender.getName() + ".keepid", -1);
             plugin.saveConfig();
         }
-        return setroad(sender);
+        return setPillar(sender);
     }
 
-    private boolean setroad(CommandSender sender) {
+    private boolean setPillar(CommandSender sender) {
         Player player = (Player) sender;
         Location loc = player.getLocation();
         Direction dir = plugin.getDirection(loc);
         Region sel = null;
         WorldEditAPI WE = new WorldEditAPI((WorldEditPlugin) plugin.getServer().getPluginManager().getPlugin("WorldEdit"));
-        road = new Road();
-        road.setMaxGradient(1);
+        pillar = new Pillar();
         try {
             sel = WE.getSession(player).getSelection(WE.getSession(player).getSelectionWorld());
         } catch (IncompleteRegionException ex) {
             sender.sendMessage(ChatColor.DARK_RED + "World Edit selection doesn't contain any blocks.");
             Logger.getLogger(LRDHelpCommand.class.getName()).log(Level.WARNING, null, ex);
         }
-        final int groundLevel = player.getLocation().getBlockY() - sel.getMinimumPoint().getBlockY() - 1;
         final int xmin = sel.getMinimumPoint().getBlockX();
         final int xmax = sel.getMaximumPoint().getBlockX();
         final int ymin = sel.getMinimumPoint().getBlockY();
         final int ymax = sel.getMaximumPoint().getBlockY();
         final int zmin = sel.getMinimumPoint().getBlockZ();
         final int zmax = sel.getMaximumPoint().getBlockZ();
-        int r = 1;
+        int r;
         switch (dir) {
             case NORTH:
                 // positive north is -x and L2R is -z
@@ -77,7 +75,7 @@ public class SetRoadCommand extends CommandHandler {
                     for (int j = zmax; j >= zmin; j--) {
                         // iterate up the y part of the selection
                         int x = 0;
-                        for (int k = ymin; k <= ymax; k++) {
+                        for (int k = ymax; k >= ymin; k--) {
                             Block worldblock = player.getWorld().getBlockAt(i, k, j);
                             BaseBlock block = new BaseBlock(worldblock.getTypeId(), worldblock.getData());
 
@@ -92,13 +90,11 @@ public class SetRoadCommand extends CommandHandler {
                         }
                         y++;
                     }
-                    RoadPart part = new RoadPart(sel.getHeight(), sel.getLength());
+                    PillarPart part = new PillarPart(sel.getHeight(), sel.getLength());
                     part.setIds(ids);
                     part.setDatas(datas);
-                    part.setGroundLayer(groundLevel);
                     part.setRepeatEvery(r);
-                    road.addRoadPart(part);
-                    part = null;
+                    pillar.addPillarPart(part);
                     r++;
                 }
                 break;
@@ -115,7 +111,7 @@ public class SetRoadCommand extends CommandHandler {
                     for (int j = zmin; j <= zmax; j++) {
                         // iterate up the y part of the selection
                         int x = 0;
-                        for (int k = ymin; k <= ymax; k++) {
+                        for (int k = ymax; k >= ymin; k--) {
                             Block worldblock = player.getWorld().getBlockAt(i, k, j);
                             BaseBlock block = new BaseBlock(worldblock.getTypeId(), worldblock.getData());
                             //rotate to face north.
@@ -132,13 +128,11 @@ public class SetRoadCommand extends CommandHandler {
                         }
                         y++;
                     }
-                    RoadPart part = new RoadPart(sel.getHeight(), sel.getLength());
+                    PillarPart part = new PillarPart(sel.getHeight(), sel.getLength());
                     part.setIds(ids);
                     part.setDatas(datas);
-                    part.setGroundLayer(groundLevel);
                     part.setRepeatEvery(r);
-                    road.addRoadPart(part);
-                    part = null;
+                    pillar.addPillarPart(part);
                     r++;
                 }
                 break;
@@ -155,7 +149,7 @@ public class SetRoadCommand extends CommandHandler {
                     for (int j = xmin; j <= xmax; j++) {
                         // iterate up the y part of the selection
                         int x = 0;
-                        for (int k = ymin; k <= ymax; k++) {
+                        for (int k = ymax; k >= ymin; k--) {
                             Block worldblock = player.getWorld().getBlockAt(j, k, i);
                             BaseBlock block = new BaseBlock(worldblock.getTypeId(), worldblock.getData());
                             //rotate to face north.
@@ -171,13 +165,11 @@ public class SetRoadCommand extends CommandHandler {
                         }
                         y++;
                     }
-                    RoadPart part = new RoadPart(sel.getHeight(), sel.getWidth());
+                    PillarPart part = new PillarPart(sel.getHeight(), sel.getWidth());
                     part.setIds(ids);
                     part.setDatas(datas);
-                    part.setGroundLayer(groundLevel);
                     part.setRepeatEvery(r);
-                    road.addRoadPart(part);
-                    part = null;
+                    pillar.addPillarPart(part);
                     r++;
                 }
                 break;
@@ -195,7 +187,7 @@ public class SetRoadCommand extends CommandHandler {
                     for (int j = xmax; j >= xmin; j--) {
                         // iterate up the y part of the selection
                         int x = 0;
-                        for (int k = ymin; k <= ymax; k++) {
+                        for (int k = ymax; k >= ymin; k--) {
                             Block worldblock = player.getWorld().getBlockAt(j, k, i);
                             BaseBlock block = new BaseBlock(worldblock.getTypeId(), worldblock.getData());
                             //rotate to face north.
@@ -211,21 +203,19 @@ public class SetRoadCommand extends CommandHandler {
                         }
                         y++;
                     }
-                    RoadPart part = new RoadPart(sel.getHeight(), sel.getWidth());
+                    PillarPart part = new PillarPart(sel.getHeight(), sel.getWidth());
                     part.setIds(ids);
                     part.setDatas(datas);
-                    part.setGroundLayer(groundLevel);
                     part.setRepeatEvery(r);
-                    road.addRoadPart(part);
-                    part = null;
+                    pillar.addPillarPart(part);
                     r++;
                 }
                 break;
             default:
                 return false;
         }
-        plugin.roadsetup.put(player.getName(), road);
-        plugin.RoadInfo(sender, road, keepid);
+        plugin.pillarsetup.put(player.getName(), pillar);
+        plugin.PillarInfo(sender, pillar, keepid);
         return true;
     }
 }

@@ -21,9 +21,9 @@ public class TestRoadCommand extends CommandHandler {
             return true;
         }
         if (plugin.roadsetup.containsKey(sender.getName())) {
-            plugin.getServer().dispatchCommand(sender, "saveroad temp true");
+            plugin.getServer().dispatchCommand(sender, "saveroad temp_" + sender.getName() + " true");
             sender.sendMessage(ChatColor.DARK_AQUA + "Testing currently set road. " + ChatColor.WHITE + "/teststop" + ChatColor.DARK_AQUA + " to stop and undo.");
-            plugin.getServer().dispatchCommand(sender, "road temp");
+            plugin.getServer().dispatchCommand(sender, "road temp_" + sender.getName());
             return true;
         } else {
             sender.sendMessage(ChatColor.DARK_RED + "There's no road set for you yet.");

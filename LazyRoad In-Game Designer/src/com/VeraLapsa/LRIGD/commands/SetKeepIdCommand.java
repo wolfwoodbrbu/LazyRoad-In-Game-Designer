@@ -2,7 +2,6 @@ package com.VeraLapsa.LRIGD.commands;
 
 import com.VeraLapsa.LRIGD.CommandHandler;
 import com.VeraLapsa.LRIGD.LazyRoadInGameDesigner;
-import com.creadri.lazyroad.Road;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 
@@ -11,8 +10,6 @@ import org.bukkit.command.CommandSender;
  * @author VeraLapsa
  */
 public class SetKeepIdCommand extends CommandHandler {
-
-    private Road road = null;
 
     public SetKeepIdCommand(LazyRoadInGameDesigner plugin) {
         super(plugin);

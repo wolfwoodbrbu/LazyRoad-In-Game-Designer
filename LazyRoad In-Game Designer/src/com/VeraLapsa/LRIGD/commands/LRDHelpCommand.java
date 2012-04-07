@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.VeraLapsa.LRIGD.commands;
 
 import com.VeraLapsa.LRIGD.CommandHandler;
@@ -11,7 +7,7 @@ import org.bukkit.command.CommandSender;
 
 /**
  *
- * @author Wolfwood
+ * @author VeraLapsa
  */
 public class LRDHelpCommand extends CommandHandler {
 
@@ -70,6 +66,26 @@ public class LRDHelpCommand extends CommandHandler {
         }
         if (kind.equalsIgnoreCase("teststop")) {
             plugin.getServer().dispatchCommand(sender, "help teststop");
+            return true;
+        }
+        if (kind.equalsIgnoreCase("roadinfo")) {
+            plugin.getServer().dispatchCommand(sender, "help roadinfo");
+            return true;
+        }
+        if (kind.equalsIgnoreCase("pillarinfo")) {
+            plugin.getServer().dispatchCommand(sender, "help pillarinfo");
+            return true;
+        }
+        if (kind.equalsIgnoreCase("setroad")) {
+            plugin.getServer().dispatchCommand(sender, "help setpillar");
+            return true;
+        }
+        if (kind.equalsIgnoreCase("saveroad")) {
+            plugin.getServer().dispatchCommand(sender, "help savepillar");
+            return true;
+        }
+        if (kind.equalsIgnoreCase("testroad")) {
+            plugin.getServer().dispatchCommand(sender, "help testpillar");
             return true;
         }
         return false;

@@ -19,7 +19,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 /**
- *
+ * 
  * @author VeraLapsa
  */
 public class SetStairsCommand extends CommandHandler {
@@ -69,9 +69,9 @@ public class SetStairsCommand extends CommandHandler {
         final int zmin = sel.getMinimumPoint().getBlockZ();
         final int zmax = sel.getMaximumPoint().getBlockZ();
         int i = 0, j = 0, k = 0, x = 0, y = 0;
-        RoadPart part = null;
-        int[][] ids = null;
-        byte[][] datas = null;
+        RoadPart part;
+        int[][] ids;
+        byte[][] datas;
         switch (dir) {
             case NORTH:
                 // positive north is -x and L2R is -z

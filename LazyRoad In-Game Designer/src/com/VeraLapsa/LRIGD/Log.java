@@ -8,27 +8,25 @@ import java.util.logging.Logger;
  */
 public class Log {
 
-    private LazyRoadInGameDesigner plugin;
-    private Logger log = null;
+    private static Logger log;
 
     public Log(LazyRoadInGameDesigner plugin) {
-        this.plugin = plugin;
-        this.log = plugin.getLogger();
+        log = plugin.getLogger();
     }
 
-    public void Info(String msg){
+    public void Info(String msg) {
         log.info(" " + msg);
     }
 
-    public void Warn(String msg){
+    public void Warn(String msg) {
         log.warning(" " + msg);
     }
 
-    public void Severe(String msg){
+    public void Severe(String msg) {
         log.severe(" " + msg);
     }
-    public void Debug(String msg){
+
+    public void Debug(String msg) {
         log.info("[debug] " + msg);
     }
-
 }

@@ -1,14 +1,6 @@
 package com.VeraLapsa.LRIGD;
 
-import com.VeraLapsa.LRIGD.commands.LRDHelpCommand;
-import com.VeraLapsa.LRIGD.commands.RoadInfoCommand;
-import com.VeraLapsa.LRIGD.commands.SaveRoadCommand;
-import com.VeraLapsa.LRIGD.commands.SetGradeCommand;
-import com.VeraLapsa.LRIGD.commands.SetKeepIdCommand;
-import com.VeraLapsa.LRIGD.commands.SetRoadCommand;
-import com.VeraLapsa.LRIGD.commands.SetStairsCommand;
-import com.VeraLapsa.LRIGD.commands.TestRoadCommand;
-import com.VeraLapsa.LRIGD.commands.TestStopCommand;
+import com.VeraLapsa.LRIGD.commands.*;
 import com.creadri.lazyroad.Pillar;
 import com.creadri.lazyroad.Road;
 import java.util.HashMap;
@@ -18,7 +10,6 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -28,8 +19,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class LazyRoadInGameDesigner extends JavaPlugin {
 
     public Log log = null;
-    private static PluginDescriptionFile pdfFile = null;
-    public static String B_PluginName = null;
     private Map<String, CommandHandler> commands = new HashMap<String, CommandHandler>();
     public Map<String, Road> roadsetup = new HashMap<String, Road>();
     public Map<String, Pillar> pillarsetup = new HashMap<String, Pillar>();
@@ -42,7 +31,6 @@ public class LazyRoadInGameDesigner extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        pdfFile = this.getDescription();
         log = new Log(this);
         Plugin p = this.getServer().getPluginManager().getPlugin("LazyRoad");
         if (p != null) {
@@ -51,16 +39,12 @@ public class LazyRoadInGameDesigner extends JavaPlugin {
             this.getConfig().options().copyDefaults(true);
 
             if (!getConfig().contains("version")) {
-                this.saveDefaultConfig();
-                this.reloadConfig();
-                this.getConfig().set("version", "'" + getDescription().getVersion() + "'");
+                this.getConfig().set("version", "" + getDescription().getVersion());
             } else if (!getConfig().getString("version").equalsIgnoreCase(getDescription().getVersion())) {
-                this.saveDefaultConfig();
-                this.reloadConfig();
-                this.getConfig().set("version", "'" + getDescription().getVersion() + "'");
+                this.getConfig().set("version", "" + getDescription().getVersion());
             }
 
-            this.saveConfig();;
+            this.saveConfig();
 
             commands.put("lrdhelp", new LRDHelpCommand(this));
             commands.put("roadinfo", new RoadInfoCommand(this));
@@ -71,6 +55,10 @@ public class LazyRoadInGameDesigner extends JavaPlugin {
             commands.put("setstairs", new SetStairsCommand(this));
             commands.put("testroad", new TestRoadCommand(this));
             commands.put("teststop", new TestStopCommand(this));
+            commands.put("pillarinfo", new PillarInfoCommand(this));
+            commands.put("savepillar", new SavePillarCommand(this));
+            commands.put("setpillar", new SetPillarCommand(this));
+            commands.put("testpillar", new TestPillarCommand(this));
 
             log.Info("has been enabled!");
         } else {
@@ -137,20 +125,43 @@ public class LazyRoadInGameDesigner extends JavaPlugin {
     }
 
     public void RoadInfo(CommandSender sender, Road road, int keepid) {
-        sender.sendMessage("" + ChatColor.GOLD + ChatColor.BOLD + "Road Info:");
-        sender.sendMessage("" + ChatColor.LIGHT_PURPLE + "Segments: " + ChatColor.WHITE + road.getParts().size());
-        sender.sendMessage("" + ChatColor.LIGHT_PURPLE + "GroundHeight: " + ChatColor.WHITE + road.getRoadPart(0).getGroundLayer());
-        sender.sendMessage("" + ChatColor.LIGHT_PURPLE + "PartSize:");
-        sender.sendMessage("" + ChatColor.LIGHT_PURPLE + "    Height: " + ChatColor.WHITE + road.getRoadPart(0).getHeight());
-        sender.sendMessage("" + ChatColor.LIGHT_PURPLE + "    Width: " + ChatColor.WHITE + road.getRoadPart(0).getWidth());
-        sender.sendMessage("" + ChatColor.LIGHT_PURPLE + "Stairs:");
-        sender.sendMessage("" + ChatColor.LIGHT_PURPLE + "    Set: " + ChatColor.WHITE + (road.getStairs() == null ? "No" : "Yes"));
-        if (road.getStairs() != null) {
-            sender.sendMessage("" + ChatColor.LIGHT_PURPLE + "    Grade: " + ChatColor.WHITE + road.getMaxGradient());
+        sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "Road Info:");
+        if (getConfig().getBoolean("debug.gotheres")) {
+            sender.sendMessage("Road Part Size: " + road.getParts().size());
         }
-        if (keepid > 0) {
-            sender.sendMessage("" + ChatColor.LIGHT_PURPLE + "Value Keeper Id: " + ChatColor.WHITE + keepid);
+        if (road.getParts().size() > 0) {
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "Segments: " + ChatColor.WHITE + road.getParts().size());
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "GroundHeight: " + ChatColor.WHITE + road.getRoadPart(0).getGroundLayer());
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "PartSize:");
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "    Height: " + ChatColor.WHITE + road.getRoadPart(0).getHeight());
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "    Width: " + ChatColor.WHITE + road.getRoadPart(0).getWidth());
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "Stairs:");
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "    Set: " + ChatColor.WHITE + (road.getStairs() == null ? "No" : "Yes"));
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "    Grade: " + ChatColor.WHITE + road.getMaxGradient());
+            if (keepid > 0) {
+                sender.sendMessage(ChatColor.LIGHT_PURPLE + "Value Keeper Id: " + ChatColor.WHITE + keepid);
+            }
+            sender.sendMessage(ChatColor.GOLD + "Use " + ChatColor.WHITE + ChatColor.BOLD + "/testroad" + ChatColor.RESET + ChatColor.GOLD + " to test.");
+        } else {
+            sender.sendMessage(ChatColor.DARK_RED + "There doesn't seem to be any road parts set.");
+            sender.sendMessage(ChatColor.DARK_RED + "Please reselect your road and run /setroad.");
         }
-        sender.sendMessage(ChatColor.GOLD + "Use " + ChatColor.WHITE + ChatColor.BOLD + "/testroad" + ChatColor.RESET + ChatColor.GOLD + " to test.");
+    }
+
+    public void PillarInfo(CommandSender sender, Pillar pillar, int keepid) {
+        sender.sendMessage(ChatColor.GOLD + "" + ChatColor.BOLD + "Pillar Info:");
+        if (pillar.getParts().size() > 0) {
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "Segments: " + ChatColor.WHITE + pillar.getParts().size());
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "PartSize:");
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "    Height: " + ChatColor.WHITE + pillar.getPillarPart(0).getHeight());
+            sender.sendMessage(ChatColor.LIGHT_PURPLE + "    Width: " + ChatColor.WHITE + pillar.getPillarPart(0).getWidth());
+            sender.sendMessage(ChatColor.GOLD + "Use " + ChatColor.WHITE + ChatColor.BOLD + "/testpillar [road name]" + ChatColor.RESET + ChatColor.GOLD + " to test.");
+            if (keepid > 0) {
+                sender.sendMessage(ChatColor.LIGHT_PURPLE + "Value Keeper Id: " + ChatColor.WHITE + keepid);
+            }
+        } else {
+            sender.sendMessage(ChatColor.DARK_RED + "There doesn't seem to be any pillar parts set.");
+            sender.sendMessage(ChatColor.DARK_RED + "Please reselect your pillar and run /setpillar.");
+        }
     }
 }
